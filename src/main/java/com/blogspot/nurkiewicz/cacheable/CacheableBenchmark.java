@@ -24,7 +24,7 @@ public class CacheableBenchmark extends SimpleBenchmark {
 	private int benchmarkWith(Calculator calculator, int reps) {
 		int accum = 0;
 		for (int i = 0; i < reps; ++i) {
-			accum += calculator.identity(i % 10);
+			accum += calculator.identity(i % 16);
 		}
 		return accum;
 	}
