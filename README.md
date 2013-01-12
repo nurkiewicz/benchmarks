@@ -208,11 +208,14 @@ I hope you are still following our experiment. We are now going to execute `Calc
 
 					  benchmark      ns linear runtime
 					  NoCaching    1.77 =
-				  ManualCaching   23.70 =
-			 CacheableWithCglib 1584.21 ==============================
-		  CacheableWithJdkProxy 1522.35 ============================
-	CacheableWithAspectJWeaving 1511.04 ============================
-				  AspectJCustom   19.86 =
+				  ManualCaching   23.84 =
+			 CacheableWithCglib 1576.42 ==============================
+		  CacheableWithJdkProxy 1551.03 =============================
+	CacheableWithAspectJWeaving 1514.83 ============================
+				  AspectJCustom   22.98 =
+
+![Caliper](tree/master/src/main/docs/caliper.png)
+
 
 ## Interpretation
 
