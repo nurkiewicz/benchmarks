@@ -1,9 +1,6 @@
 package com.blogspot.nurkiewicz.cacheable;
 
-import com.blogspot.nurkiewicz.cacheable.calculator.Calculator;
-import com.blogspot.nurkiewicz.cacheable.calculator.ManuallyInstrumentedCalculator;
-import com.blogspot.nurkiewicz.cacheable.calculator.PlainCalculator;
-import com.blogspot.nurkiewicz.cacheable.calculator.SpringInstrumentedCalculator;
+import com.blogspot.nurkiewicz.cacheable.calculator.*;
 import org.springframework.cache.CacheManager;
 import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.cache.concurrent.ConcurrentMapCacheManager;

@@ -1,4 +1,4 @@
-package com.blogspot.nurkiewicz.cacheable;
+package com.blogspot.nurkiewicz.cacheable.calculator;
 
 import com.blogspot.nurkiewicz.cacheable.calculator.Calculator;
 
