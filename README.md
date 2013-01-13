@@ -5,9 +5,9 @@ Spring 3.1 introduced great [caching abstraction layer](http://static.springsour
 	@Cacheable("books")
 	public Book findBook(ISBN isbn) {...}
 
-`"books"` is a cache name, `isbn` parameter becomes cache key and returned `Book` object will be placed under that key. The meaning of cache name is dependant on the underlying cache manager (EhCache, concurrent map, etc.) - Spring makes it easy to plug different caching providers. But this post won't be about caching feature in Spring...
+`"books"` is a cache name, `isbn` parameter becomes cache key and returned `Book` object will be placed under that key. The meaning of cache name is dependant on the underlying cache manager (EhCache, concurrent map, etc.) - Spring makes it easy to plug different caching providers. But **this post won't be about caching feature in Spring**...
 
-Some time ago my teammate was optimizing quite low-level code and discovered an opportunity for caching. He quickly applied `@Cacheable` just to discover that the code performed worse then it used to. He got rid of the annotation and implemented caching himself manually, using good old `java.util.ConcurrentHashMap`. The performance was much better. He blamed `@Cacheable` and Spring AOP overhead and complexity. I couldn't believe that a caching layer can perform so poorly until I had to debug caching aspects few times (some nasty bug, you know, cache invalidation is one of the [two hardest things in CS](http://martinfowler.com/bliki/TwoHardThings.html)). Well, the code is much more complex than one would expect (after all it's just GET and PUT!), but it doesn't necessarily mean it must be that slow?
+Some time ago my teammate was optimizing quite low-level code and discovered an opportunity for caching. He quickly applied `@Cacheable` just to discover that the code performed worse then it used to. He got rid of the annotation and implemented caching himself manually, using good old `java.util.ConcurrentHashMap`. The performance was much better. He blamed `@Cacheable` and Spring AOP overhead and complexity. I couldn't believe that a caching layer can perform so poorly until I had to debug Spring caching aspects few times myself (some nasty bug in my code, you know, cache invalidation is one of the [two hardest things in CS](http://martinfowler.com/bliki/TwoHardThings.html)). Well, the caching abstraction code is much more complex than one would expect (after all it's just *get* and *put*!), but it doesn't necessarily mean it must be that slow?
 
 In *science* we don't believe and trust, we measure and benchmark. So I wrote a benchmark to precisely measure the overhead of `@Cacheable` layer. Caching abstraction layer in Spring is implemented on top of Spring AOP, which can further be implemented on top of Java proxies, CGLIB generated subclasses or AspectJ instrumentation. Thus I'll test the following configurations:
 
@@ -41,7 +41,7 @@ Let me reiterate: we are **not** measuring the performance gain of caching and w
 	
 	}
 
-I know, I know there is no point in caching such a method. But I want to measure the overhead of caching layer (during cache hit to be specific). Each caching configuration will have its own `ApplicationContext` as you can't mix different proxying mode in one context:
+I know, I know there is no point in caching such a method. But I want to measure the overhead of caching layer (during cache hit to be specific). Each caching configuration will have its own `ApplicationContext` as you can't mix different proxying modes in one context:
 
 	public abstract class BaseConfig {
 	
@@ -106,7 +106,7 @@ I know, I know there is no point in caching such a method. But I want to measure
 	
 	}
 
-Each `@Configuration` class represents one application context. `CachingCalculatorDecorator` is a decorator around *real* calculator that does the caching (welcome in the 1990s):
+Each `@Configuration` class represents one application context. `CachingCalculatorDecorator` is a decorator around *real* calculator that does the caching (welcome to the 1990s):
 
 	public class CachingCalculatorDecorator implements Calculator {
 	
@@ -150,7 +150,7 @@ Each `@Configuration` class represents one application context. `CachingCalculat
 
 	}
 
-After all this preparation we can finally write the benchmark itself. At the beginning I start all the application contexts and fetch `Calculator` instance. Each instance is different. For example `noCaching` is a `PlainCalculator` instance with no wrappers, `cacheableCglib` is a CGLIB generated subclass while `aspectJCustom` is an instance of `ManuallyInstrumentedCalculator` with my custom aspect woven.
+After all this preparation we can finally write the benchmark itself. At the beginning I start all the application contexts and fetch `Calculator` instances. Each instance is different. For example `noCaching` is a `PlainCalculator` instance with no wrappers, `cacheableCglib` is a CGLIB generated subclass while `aspectJCustom` is an instance of `ManuallyInstrumentedCalculator` with my custom aspect woven.
 
 	private final Calculator noCaching = fromSpringContext(NoCachingConfig.class);
 	private final Calculator manualCaching = fromSpringContext(ManualCachingConfig.class);
@@ -223,10 +223,10 @@ Let's go step by step. First of all calling a method in Java is pretty darn fast
 
 Hand-made caching decorator is also pretty fast. Of course it's slower by an order of magnitude compared to pure function call, but still blazingly fast compared to all `@Scheduled` benchmarks. We see a drop by **3 orders of magnitude**, from 1.8 ns to 1.5 μs. I'm especially disappointed by the `@Cacheable` backed by AspectJ. After all caching aspect is precompiled directly into my Java `.class` file, I would expect it to be much faster compared to dynamic proxies and CGLIB. But that doesn't seem to be the case. All three Spring AOP techniques are similar.
 
-The greatest surprise is my custom AspectJ aspect. It's even significantly faster than `CachingCalculatorDecorator`! maybe it's due to polymorphic call in the decorator? I strongly encourage you to [clone this benchmark on GitHub](https://github.com/nurkiewicz/spring-cacheable-benchmark) and run it (`mvn clean test`, takes around 2 minutes) to compare your results.
+The greatest surprise is my custom AspectJ aspect. It's even faster than `CachingCalculatorDecorator`! maybe it's due to polymorphic call in the decorator? I strongly encourage you to [clone this benchmark on GitHub](https://github.com/nurkiewicz/spring-cacheable-benchmark) and run it (`mvn clean test`, takes around 2 minutes) to compare your results.
 
 ## Conclusions
 
-You might be wondering why Spring abstraction layer is so slow? Well, first of all, check out the core implementation in [`CacheAspectSupport`](https://github.com/SpringSource/spring-framework/blob/3.2.x/spring-context/src/main/java/org/springframework/cache/interceptor/CacheAspectSupport.java) - it's actually quite complex. Secondly, is it really that slow? Do the math - you typically use Spring in business applications where database, network and external APIs are the bottleneck. What latencies do you typically see? Milliseconds? Tens or hundreds of milliseconds? Now add an overhead of 2 μs (worst case scenario). For caching database queries or REST calls this is completely negligible. It doesn't matter which technique you choose.
+You might be wondering why Spring abstraction layer is so slow? Well, first of all, check out the core implementation in [`CacheAspectSupport`](https://github.com/SpringSource/spring-framework/blob/3.2.x/spring-context/src/main/java/org/springframework/cache/interceptor/CacheAspectSupport.java) - it's actually quite complex. Secondly, is it really that slow? Do the math - you typically use Spring in business applications where database, network and external APIs are the bottleneck. What latencies do you typically see? Milliseconds? Tens or hundreds of milliseconds? Now add an overhead of 2 μs (worst case scenario). For caching database queries or REST calls this is completely negligible. **It doesn't matter which technique you choose**.
 
-But if you are caching very low-level methods, like CPU-intensive, in-memory computations, Spring abstraction layer might be an overkill. The bottom line: measure!
+But if you are caching very low-level methods close to the metal, like CPU-intensive, in-memory computations, Spring abstraction layer might be an overkill. The bottom line: measure!
