@@ -124,6 +124,7 @@
 						</source>
 					</sources>
 					<complianceLevel>1.6</complianceLevel>
+					<forceAjcCompile>true</forceAjcCompile>
 					<aspectLibraries>
 						<aspectLibrary>
 							<groupId>org.springframework</groupId>
