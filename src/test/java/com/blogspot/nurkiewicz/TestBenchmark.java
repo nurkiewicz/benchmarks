@@ -1,6 +1,7 @@
-package com.blogspot.nurkiewicz.cacheable.cacheable;
+package com.blogspot.nurkiewicz;
 
 import com.blogspot.nurkiewicz.cacheable.CacheableBenchmark;
+import com.blogspot.nurkiewicz.inlining.InliningBenchmark;
 import com.google.caliper.Runner;
 import org.junit.Test;
 
@@ -11,8 +12,13 @@ import org.junit.Test;
 public class TestBenchmark {
 
 	@Test
-	public void run() throws Exception {
+	public void runCacheableBenchmark() throws Exception {
 		Runner.main(CacheableBenchmark.class, new String[]{"--trials", "1"});
+	}
+
+	@Test
+	public void runInliningBenchmark() throws Exception {
+		Runner.main(InliningBenchmark.class, new String[]{"--trials", "1"});
 	}
 
 }
