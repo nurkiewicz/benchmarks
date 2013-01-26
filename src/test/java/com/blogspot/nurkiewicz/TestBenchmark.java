@@ -12,13 +12,9 @@ import org.junit.Test;
 public class TestBenchmark {
 
 	@Test
-	public void runCacheableBenchmark() throws Exception {
-		Runner.main(CacheableBenchmark.class, new String[]{"--trials", "1"});
-	}
-
-	@Test
-	public void runInliningBenchmark() throws Exception {
-		Runner.main(InliningBenchmark.class, new String[]{"--trials", "1"});
+	public void run() throws Exception {
+		new Runner().run("--trials", "1", CacheableBenchmark.class.getName());
+		new Runner().run("--trials", "1", InliningBenchmark.class.getName());
 	}
 
 }
