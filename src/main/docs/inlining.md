@@ -1,3 +1,5 @@
+# How aggressive is method inlining in JVM?
+
 `Ctrl` + `Alt` + `M` is used in [IntelliJ IDEA to extract method](http://www.jetbrains.com/idea/webhelp/extract-method.html). `Ctrl` + `Alt` + `M`. It's as simple as selecting a piece of code and hitting this combination. [Eclipse also has it](http://help.eclipse.org/juno/index.jsp?topic=%2Forg.eclipse.jdt.doc.user%2FgettingStarted%2Fqs-ExtractMethod.htm). I hate long methods. To the point where this smells too long for me:
 
 	public void processOnEndOfDay(Contract c) {
