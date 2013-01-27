@@ -214,7 +214,7 @@ I hope you are still following our experiment. We are now going to execute `Calc
 	CacheableWithAspectJWeaving 1514.83 ============================
 				  AspectJCustom   22.98 =
 
-![Caliper](https://raw.github.com/nurkiewicz/spring-cacheable-benchmark/master/src/main/docs/caliper.png)
+![Caliper](https://raw.github.com/nurkiewicz/spring-cacheable-benchmark/master/src/main/docs/caching_timing.png)
 
 
 ## Interpretation
