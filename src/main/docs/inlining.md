@@ -231,13 +231,13 @@ and an implementation:
 	}
 
 
-Encouraged by some interesting readers input after [my article about `@Cacheable` overhead](http://nurkiewicz.blogspot.no/2013/01/cacheable-overhead-in-spring.html) I wrote a [quick benchmark](https://github.com/nurkiewicz/benchmarks/blob/master/src/main/java/com/blogspot/nurkiewicz/inlining/InliningBenchmark.java) to compare the overhead of over-extracted `ConcreteAdder` and `VirtualAdder` (to see virtual call overhead). Results are unexpected and a bit ambiguous. I run the same benchmark on two machines, same software but the second one has more cores and is 64 bit:
+Encouraged by some interesting readers input after [my article about `@Cacheable` overhead](http://nurkiewicz.blogspot.no/2013/01/cacheable-overhead-in-spring.html) I wrote a [quick benchmark](https://github.com/nurkiewicz/benchmarks/blob/master/src/main/java/com/blogspot/nurkiewicz/inlining/InliningBenchmark.java) to compare the overhead of over-extracted `ConcreteAdder` and `VirtualAdder` (to see virtual call overhead). Results are unexpected and a bit ambiguous. I run the same benchmark on two machines (blue and red), same software but the second one has more cores and is 64 bit:
 
-![Diagram](https://raw.github.com/nurkiewicz/spring-cacheable-benchmark/master/src/main/docs/img/caching_timing.png)
+![Diagram](https://raw.github.com/nurkiewicz/benchmarks/master/src/main/docs/img/inlining-diagram.png)
 
 Detailed environments:
 
-![Environments](https://raw.github.com/nurkiewicz/spring-cacheable-benchmark/master/src/main/docs/img/inlining-environments.png)
+![Environments](https://raw.github.com/nurkiewicz/benchmarks/master/src/main/docs/img/inlining-environments.png)
 
 It turns out that on a slower machine *A* JVM decided to inline everything. Not only simple `private` calls but also the virtual once. How's that possible? Well, JVM discovered that there is only one subclass of `Adder`, thus only one possible version of each `abstract` method. If, at runtime, you load another subclass (or even more subclasses), you can expect to see performance drop as inlining is no longer possible. But keeping details aside, in this benchmark **method calls aren't cheap, they are effectively free**! Method calls (with their great documentation value improving readability) exist only in your source code and bytecode. At runtime they are completely eliminated (inlined).
 
