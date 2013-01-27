@@ -130,7 +130,7 @@ Each `@Configuration` class represents one application context. `CachingCalculat
 		}
 	}
 
-[`SpringInstrumentedCalculator`](https://github.com/nurkiewicz/spring-cacheable-benchmark/blob/master/src/main/java/com/blogspot/nurkiewicz/cacheable/calculator/SpringInstrumentedCalculator.java) and [`ManuallyInstrumentedCalculator`](https://github.com/nurkiewicz/spring-cacheable-benchmark/blob/master/src/main/java/com/blogspot/nurkiewicz/cacheable/calculator/ManuallyInstrumentedCalculator.java) are exactly the same as [`PlainCalculator`](https://github.com/nurkiewicz/spring-cacheable-benchmark/blob/master/src/main/java/com/blogspot/nurkiewicz/cacheable/calculator/PlainCalculator.java) but they are instrumented by AspectJ compile-time weaver with Spring and custom aspect accordingly. My custom caching aspect looks like this:
+[`SpringInstrumentedCalculator`](https://github.com/nurkiewicz/benchmarks/blob/master/src/main/java/com/blogspot/nurkiewicz/cacheable/calculator/SpringInstrumentedCalculator.java) and [`ManuallyInstrumentedCalculator`](https://github.com/nurkiewicz/benchmarks/blob/master/src/main/java/com/blogspot/nurkiewicz/cacheable/calculator/ManuallyInstrumentedCalculator.java) are exactly the same as [`PlainCalculator`](https://github.com/nurkiewicz/benchmarks/blob/master/src/main/java/com/blogspot/nurkiewicz/cacheable/calculator/PlainCalculator.java) but they are instrumented by AspectJ compile-time weaver with Spring and custom aspect accordingly. My custom caching aspect looks like this:
 
 	public aspect ManualCachingAspect {
 
@@ -214,7 +214,7 @@ I hope you are still following our experiment. We are now going to execute `Calc
 	CacheableWithAspectJWeaving 1514.83 ============================
 				  AspectJCustom   22.98 =
 
-![Caliper](https://raw.github.com/nurkiewicz/spring-cacheable-benchmark/master/src/main/docs/img/caching_timing.png)
+![Caliper](https://raw.github.com/nurkiewicz/benchmarks/master/src/main/docs/img/caching_timing.png)
 
 
 ## Interpretation
@@ -223,7 +223,7 @@ Let's go step by step. First of all calling a method in Java is pretty darn fast
 
 Hand-made caching decorator is also pretty fast. Of course it's slower by an order of magnitude compared to pure function call, but still blazingly fast compared to all `@Scheduled` benchmarks. We see a drop by **3 orders of magnitude**, from 1.8 ns to 1.5 μs. I'm especially disappointed by the `@Cacheable` backed by AspectJ. After all caching aspect is precompiled directly into my Java `.class` file, I would expect it to be much faster compared to dynamic proxies and CGLIB. But that doesn't seem to be the case. All three Spring AOP techniques are similar.
 
-The greatest surprise is my custom AspectJ aspect. It's even faster than `CachingCalculatorDecorator`! maybe it's due to polymorphic call in the decorator? I strongly encourage you to [clone this benchmark on GitHub](https://github.com/nurkiewicz/spring-cacheable-benchmark) and run it (`mvn clean test`, takes around 2 minutes) to compare your results.
+The greatest surprise is my custom AspectJ aspect. It's even faster than `CachingCalculatorDecorator`! maybe it's due to polymorphic call in the decorator? I strongly encourage you to [clone this benchmark on GitHub](https://github.com/nurkiewicz/benchmarks) and run it (`mvn clean test`, takes around 2 minutes) to compare your results.
 
 ## Conclusions
 
