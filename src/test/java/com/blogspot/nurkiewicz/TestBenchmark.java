@@ -12,8 +12,12 @@ import org.junit.Test;
 public class TestBenchmark {
 
 	@Test
-	public void run() throws Exception {
+	public void runCacheable() throws Exception {
 		new Runner().run("--trials", "1", CacheableBenchmark.class.getName());
+	}
+
+	@Test
+	public void runInlining() throws Exception {
 		new Runner().run("--trials", "1", InliningBenchmark.class.getName());
 	}
 

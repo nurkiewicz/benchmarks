@@ -108,6 +108,7 @@
 				<version>2.9</version>
 				<configuration>
 					<argLine>-XX:MaxPermSize=200m</argLine>
+					<forkMode>always</forkMode>
 				</configuration>
 			</plugin>
 			<plugin>
