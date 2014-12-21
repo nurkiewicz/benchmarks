@@ -1,7 +1,5 @@
 package com.blogspot.nurkiewicz.cacheable.calculator;
 
-import com.blogspot.nurkiewicz.cacheable.calculator.Calculator;
-
 import java.util.Map;
 
 /**
