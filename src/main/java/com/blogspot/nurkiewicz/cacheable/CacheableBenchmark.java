@@ -1,14 +1,14 @@
 package com.blogspot.nurkiewicz.cacheable;
 
 import com.blogspot.nurkiewicz.cacheable.calculator.Calculator;
-import com.google.caliper.SimpleBenchmark;
+import com.google.caliper.Benchmark;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 
 /**
  * @author Tomasz Nurkiewicz
  * @since 1/12/13, 12:07 AM
  */
-public class CacheableBenchmark extends SimpleBenchmark {
+public class CacheableBenchmark extends Benchmark {
 
 	private final Calculator noCaching = fromSpringContext(NoCachingConfig.class);
 	private final Calculator manualCaching = fromSpringContext(ManualCachingConfig.class);

@@ -2,8 +2,10 @@ package com.blogspot.nurkiewicz;
 
 import com.blogspot.nurkiewicz.cacheable.CacheableBenchmark;
 import com.blogspot.nurkiewicz.inlining.InliningBenchmark;
-import com.google.caliper.Runner;
+import com.google.caliper.runner.CaliperMain;
 import org.junit.Test;
+
+import java.io.PrintWriter;
 
 /**
  * @author Tomasz Nurkiewicz
@@ -13,12 +15,12 @@ public class TestBenchmark {
 
 	@Test
 	public void runCacheable() throws Exception {
-		new Runner().run("--trials", "1", CacheableBenchmark.class.getName());
+        CaliperMain.exitlessMain(new String[]{"--trials", "1", CacheableBenchmark.class.getName()}, new PrintWriter(System.out, true), new PrintWriter(System.err, true));
 	}
 
 	@Test
 	public void runInlining() throws Exception {
-		new Runner().run("--trials", "1", InliningBenchmark.class.getName());
+        CaliperMain.exitlessMain(new String[]{"--trials", "1", InliningBenchmark.class.getName()}, new PrintWriter(System.out, true), new PrintWriter(System.err, true));
 	}
 
 }
