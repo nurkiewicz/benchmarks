@@ -1,21 +1,24 @@
 package com.blogspot.nurkiewicz.cacheable;
 
 import com.blogspot.nurkiewicz.cacheable.calculator.Calculator;
-import com.google.caliper.SimpleBenchmark;
+import com.google.caliper.Benchmark;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 
 /**
  * @author Tomasz Nurkiewicz
  * @since 1/12/13, 12:07 AM
  */
-public class CacheableBenchmark extends SimpleBenchmark {
+public class CacheableBenchmark extends Benchmark {
 
 	private final Calculator noCaching = fromSpringContext(NoCachingConfig.class);
-	private final Calculator manualCaching = fromSpringContext(ManualCachingConfig.class);
+
+	private final Calculator manualConcurrentHashMap = fromSpringContext(ManualCachingWithConcurrentHashMapConfig.class);
+	private final Calculator manualCacheManager = fromSpringContext(ManualCachingWithCacheManagerConfig.class);
+	private final Calculator aspectJConcurrentHashMap = fromSpringContext(AspectJCustomAspect.class);
+
 	private final Calculator cacheableCglib = fromSpringContext(CacheableCglibConfig.class);
 	private final Calculator cacheableJdkProxy = fromSpringContext(CacheableJdkProxyConfig.class);
 	private final Calculator cacheableAspectJ = fromSpringContext(CacheableAspectJWeaving.class);
-	private final Calculator aspectJCustom = fromSpringContext(AspectJCustomAspect.class);
 
 	private static <T extends BaseConfig> Calculator fromSpringContext(Class<T> config) {
 		return new AnnotationConfigApplicationContext(config).getBean(Calculator.class);
@@ -33,8 +36,16 @@ public class CacheableBenchmark extends SimpleBenchmark {
 		return benchmarkWith(noCaching, reps);
 	}
 
-	public int timeManualCaching(int reps) {
-		return benchmarkWith(manualCaching, reps);
+	public int timeManualWithConcurrentHashMap(int reps) {
+		return benchmarkWith(manualConcurrentHashMap, reps);
+	}
+
+	public int timeManualWithCacheManager(int reps) {
+		return benchmarkWith(manualCacheManager, reps);
+	}
+
+	public int timeAspectJWithConcurrentHashMap(int reps) {
+		return benchmarkWith(aspectJConcurrentHashMap, reps);
 	}
 
 	public int timeCacheableWithCglib(int reps) {
@@ -47,9 +58,5 @@ public class CacheableBenchmark extends SimpleBenchmark {
 
 	public int timeCacheableWithAspectJWeaving(int reps) {
 		return benchmarkWith(cacheableAspectJ, reps);
-	}
-
-	public int timeAspectJCustom(int reps) {
-		return benchmarkWith(aspectJCustom, reps);
 	}
 }

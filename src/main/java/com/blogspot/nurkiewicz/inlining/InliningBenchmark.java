@@ -1,12 +1,12 @@
 package com.blogspot.nurkiewicz.inlining;
 
-import com.google.caliper.SimpleBenchmark;
+import com.google.caliper.Benchmark;
 
 /**
  * @author Tomasz Nurkiewicz
  * @since 1/24/13, 6:46 PM
  */
-public class InliningBenchmark extends SimpleBenchmark {
+public class InliningBenchmark extends Benchmark {
 
 	private final Adder virtualAdder = new VirtualAdder();
 	private final InlineAdder inlineAdder = new InlineAdder();
