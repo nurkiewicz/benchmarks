@@ -15,12 +15,12 @@ public class TestBenchmark {
 
 	@Test
 	public void runCacheable() throws Exception {
-        CaliperMain.exitlessMain(new String[]{"--trials", "1", CacheableBenchmark.class.getName()}, new PrintWriter(System.out, true), new PrintWriter(System.err, true));
+		CaliperMain.exitlessMain(new String[]{"--trials", "1", CacheableBenchmark.class.getName()}, new PrintWriter(System.out, true), new PrintWriter(System.err, true));
 	}
 
 	@Test
 	public void runInlining() throws Exception {
-        CaliperMain.exitlessMain(new String[]{"--trials", "1", InliningBenchmark.class.getName()}, new PrintWriter(System.out, true), new PrintWriter(System.err, true));
+		CaliperMain.exitlessMain(new String[]{"--trials", "1", InliningBenchmark.class.getName()}, new PrintWriter(System.out, true), new PrintWriter(System.err, true));
 	}
 
 }

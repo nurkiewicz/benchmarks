@@ -25,11 +25,20 @@ public abstract class BaseConfig {
 class NoCachingConfig extends BaseConfig {}
 
 @Configuration
-class ManualCachingConfig extends BaseConfig {
+class ManualCachingWithConcurrentHashMapConfig extends BaseConfig {
 	@Bean
 	@Override
 	public Calculator calculator() {
 		return new CachingCalculatorDecorator(super.calculator());
+	}
+}
+
+@Configuration
+class ManualCachingWithCacheManagerConfig extends CacheManagerConfig {
+	@Bean
+	@Override
+	public Calculator calculator() {
+		return new CacheManagerCalculatorDecorator(super.calculator());
 	}
 }
 
